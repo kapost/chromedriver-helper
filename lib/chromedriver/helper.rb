@@ -6,7 +6,7 @@ require 'rbconfig'
 
 module Chromedriver
   class Helper
-    DOWNLOAD_URL = "http://code.google.com/p/chromedriver/downloads/list"
+    DOWNLOAD_URL = "http://code.google.com/p/chromedriver/downloads/list?can=4"
 
     def run *args
       download
@@ -33,7 +33,7 @@ module Chromedriver
 
     def download_url
       downloads = GoogleCodeParser.new(open(DOWNLOAD_URL)).downloads
-      url = downloads.grep(/chromedriver_#{platform}_.*\.zip/).last
+      url = downloads.grep(/chromedriver_#{platform}_.*\.zip/).first
       url = "http:#{url}" if url !~ /^http/
       url
     end
