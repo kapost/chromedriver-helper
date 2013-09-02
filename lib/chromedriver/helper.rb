@@ -49,7 +49,7 @@ module Chromedriver
     end
 
     def install_dir
-      dir = File.expand_path File.join(ENV['HOME'], ".chromedriver-helper")
+      dir = File.expand_path File.join(ENV['HOME'], ".chromedriver-helper2")
       FileUtils.mkdir_p dir
       dir
     end
