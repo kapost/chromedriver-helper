@@ -33,7 +33,7 @@ module Chromedriver
 
     def download_url
       downloads = GoogleCodeParser.new(open(DOWNLOAD_URL)).downloads
-      url = downloads.grep(/chromedriver_#{platform}_.*\.zip/).first
+      url = downloads.grep(/chromedriver_#{platform}_2\.0.*\.zip/).last
       url = "http:#{url}" if url !~ /^http/
       url
     end
@@ -49,7 +49,7 @@ module Chromedriver
     end
 
     def install_dir
-      dir = File.expand_path File.join(ENV['HOME'], ".chromedriver-helper2")
+      dir = File.expand_path File.join(ENV['HOME'], ".chromedriver-helper")
       FileUtils.mkdir_p dir
       dir
     end
