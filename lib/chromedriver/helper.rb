@@ -33,7 +33,7 @@ module Chromedriver
 
     def download_url
       downloads = GoogleCodeParser.new(open(DOWNLOAD_URL)).downloads
-      url = downloads.grep(/chromedriver_#{platform}_2\.0.*\.zip/).last
+      url = downloads.grep(/chromedriver2_#{platform}_0\.9.*\.zip/).last
       url = "http:#{url}" if url !~ /^http/
       url
     end
