@@ -6,7 +6,7 @@ require 'rbconfig'
 
 module Chromedriver
   class Helper
-    DOWNLOAD_URL = "http://code.google.com/p/chromedriver/downloads/list?can=4"
+    DOWNLOAD_URL = "http://chromedriver.storage.googleapis.com"
 
     def run *args
       download
@@ -18,12 +18,12 @@ module Chromedriver
       url = download_url
       filename = File.basename url
       Dir.chdir platform_install_dir do
-        unless File.exists? filename
-          system("wget -c -O #{filename} #{url}") || system("curl -C - -o #{filename} #{url}")
-          raise "Could not download #{url}" unless File.exists? filename
-          system "unzip -o #{filename}"
-        end
+        system(*%W[wget -c -O #{filename} #{url}]) || system(*%W[curl -C - -o #{filename} #{url}])
+        raise "Could not download #{url}" unless File.exists? filename
+
+        system *%W[unzip -o #{filename}]
       end
+
       raise "Could not unzip #{filename} to get #{binary_path}" unless File.exists? binary_path
     end
 
@@ -33,8 +33,9 @@ module Chromedriver
 
     def download_url
       downloads = GoogleCodeParser.new(open(DOWNLOAD_URL)).downloads
-      url = downloads.grep(/chromedriver2_#{platform}_0\.9.*\.zip/).last
-      url = "http:#{url}" if url !~ /^http/
+      downloads = downloads.grep(/^[\d\.]+\/chromedriver_#{platform}\.zip$/).sort_by{|_| /^([\d\.]+)/.match(_) && Gem::Version.new($1)}
+      url = downloads.last
+      url = "#{DOWNLOAD_URL}/#{url}"
       url
     end
 
@@ -59,8 +60,8 @@ module Chromedriver
       case cfg['host_os']
       when /linux/ then
         cfg['host_cpu'] =~ /x86_64|amd64/ ? "linux64" : "linux32"
-      when /darwin/ then "mac"
-      else "win"
+      when /darwin/ then "mac32"
+      else "win32"
       end
     end
   end

@@ -3,15 +3,15 @@ require 'nokogiri'
 module Chromedriver
   class Helper
     class GoogleCodeParser
-      attr_reader :html
+      attr_reader :xml
 
-      def initialize html
-        @html = html
+      def initialize xml
+        @xml= xml
       end
 
       def downloads
-        doc = Nokogiri::HTML html
-        doc.css("td.vt a[@title=Download]").collect {|_| _["href"]}
+        doc = Nokogiri::XML xml
+        doc.search("Contents Key").collect {|_| _.content}
       end
     end
   end
