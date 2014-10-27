@@ -34,7 +34,7 @@ module Chromedriver
     def download_url
       downloads = GoogleCodeParser.new(open(DOWNLOAD_URL)).downloads
       downloads = downloads.grep(/^[\d\.]+\/chromedriver_#{platform}\.zip$/).sort_by{|_| /^([\d\.]+)/.match(_) && Gem::Version.new($1)}
-      url = downloads.last.sub('2.11', '2.10')
+      url = downloads.last.sub(/2\.\d+/, '2.10')
       url = "#{DOWNLOAD_URL}/#{url}"
       url
     end
